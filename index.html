@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>数据可视化技术 · 智慧学习与教学平台</title><link rel="stylesheet" href="css/style.css"></head>
+<body class="student">
+<div class="landing">
+  <div class="l-left">
+    <div class="brand" style="padding:0"><div class="logo">📊</div><div><b style="font-size:17px">数据可视化技术</b><small>Data Visualization · 智慧教学平台</small></div></div>
+    <h1>让学习有<span>路径</span>，让教学有<span>数据</span></h1>
+    <p>面向学生的个性化学习平台与面向教师的智能教学管理平台，围绕《数据可视化技术》课程，提供知识导览、智能问答、学习路径推荐与学习状态评估。</p>
+    <div class="feat">
+      <div><b>🧭 知识导览</b>课程知识图谱，前置关系一目了然</div>
+      <div><b>💬 智能问答</b>课程知识库助教，可选接入大模型</div>
+      <div><b>🛤️ 路径推荐</b>拓扑排序 + 薄弱点优先的个性化路径</div>
+      <div><b>📈 状态评估</b>雷达图、趋势、小测验与诊断建议</div>
+    </div>
+  </div>
+  <div class="l-right"><div class="login">
+    <h2>欢迎登录</h2><div class="sub">请选择您的角色后进入</div>
+    <div class="role-sw"><button id="r-student" class="on"><span class="ri">🎓</span><b>学生端</b><small>个性化学习平台</small></button><button id="r-teacher"><span class="ri">👩‍🏫</span><b>教师端</b><small>智能教学管理平台</small></button></div>
+    <div id="f-student"><label class="f">选择学生账号</label><select id="sid"></select></div>
+    <div id="f-teacher" style="display:none"><label class="f">教师账号</label><input value="teacher_wang" disabled><label class="f">授课班级</label><input value="2023级虚拟现实技术1班" disabled></div>
+    <button class="btn primary" id="enter">进入学生端 →</button>
+    <div class="login-note">学习数据保存在本机浏览器中。</div>
+  </div></div>
+</div>
+<script src="js/data.js"></script><script src="js/roster.js"></script><script src="js/engine.js"></script>
+<script>
+(function(){
+  DV.init(); let role=DV.session().role||'student';
+  const sel=document.getElementById('sid');
+  sel.innerHTML=DV.students().map(s=>'<option value="'+s.id+'">'+s.id+' · '+s.name+'</option>').join('');
+  sel.value=DV.session().sid||DV.DEFAULT_SID;
+  function set(r){role=r;document.getElementById('r-student').classList.toggle('on',r==='student');document.getElementById('r-teacher').classList.toggle('on',r==='teacher');
+    document.getElementById('f-student').style.display=r==='student'?'':'none';document.getElementById('f-teacher').style.display=r==='teacher'?'':'none';
+    document.getElementById('enter').textContent=r==='student'?'进入学生端 →':'进入教师端 →';document.body.className=r;}
+  document.getElementById('r-student').onclick=()=>set('student');document.getElementById('r-teacher').onclick=()=>set('teacher');
+  document.getElementById('enter').onclick=()=>{DV.store.set('session',{role:role,sid:sel.value});location.href=role==='student'?'student.html':'teacher.html';};
+  set(role);
+})();
+</script></body></html>
